@@ -3,30 +3,18 @@
 #include<stdlib.h>
 #include<stdio.h>
 
-// cross platform sleep
-#ifdef _WIN32
-//  For Windows (32- and 64-bit)
-#   include <windows.h>
-#   define SLEEP(msecs) Sleep(msecs)
-#elif __unix
-//  For linux, OSX, and other unixes
-// #   define _POSIX_C_SOURCE 199309L // or greater
-#   include <time.h>
-#   define SLEEP(msecs) do {            \
-        struct timespec ts;             \
-        ts.tv_sec = msecs/1000;         \
-        ts.tv_nsec = msecs%1000*1000*1000;   \
-        nanosleep(&ts, NULL);           \
-        } while (0)
-#else
-#   error "Unknown system. This code will compile on Windows or Linux."
-#endif
-
 #include "sprites.h"
 #include "ground.h"
 #include "input.h"
 #include "score.h"
 #include "vessels.h"
+
+void sleep(int msecs) {
+    struct timespec ts;
+    ts.tv_sec = msecs/1000;
+    ts.tv_nsec = msecs%1000*1000*1000;
+    nanosleep(&ts, NULL);
+}
 
 int main() {
     srand(time(0));
@@ -51,15 +39,24 @@ int main() {
     wrefresh(input_window);
     wrefresh(score_window);
 
+    int avx = COLS-VESSEL_SPRITE_W;
+    int avy = LINES-SCORE_WINDOW_H-GROUND_WINDOW_H-VESSEL_SPRITE_H-SPAWN_OFFSET;
+
+    init_score();
     init_vessel_manager();
     for(int i=0; i<10; i++) {
-        add_vessel(rand()%20,rand()%50);
+        add_vessel(rand()%avy,rand()%avx);
     }
     render_all_vessels();
 
     for(int i=0; i<10; i++) {
-        SLEEP(500);
+        sleep(500);
         step_all_vessels();
+    }
+
+    for(int i=0; i<10; i++) {
+        sleep(500);
+        delete_vessel(0);
     }
 
     getch();
