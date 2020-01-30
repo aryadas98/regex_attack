@@ -49,15 +49,23 @@ int main() {
     }
     render_all_vessels();
 
+    /*
     for(int i=0; i<10; i++) {
         sleep(500);
         step_all_vessels();
     }
 
-    for(int i=0; i<10; i++) {
+    for(int i=0; i<20; i++) {
         sleep(500);
-        delete_vessel(0);
+        destroy_vessel(0);
+        step_all_vessels();
     }
+    */
+
+   while(num_vessels>0) {
+       sleep(500);
+       step_all_vessels();
+   }
 
     getch();
     endwin();

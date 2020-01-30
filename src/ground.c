@@ -25,7 +25,7 @@ static void ground_copy_base() {
 static void ground_write_value(int x, int y, char c) {
     ground[(y+GROUND_TERRAIN_SKIP)*COLS+x] = c;
     for(int i=y+1; i<GROUND_TERRAIN_H; i++)
-        ground[(i+GROUND_TERRAIN_SKIP)*COLS+x] = ':';
+        ground[(i+GROUND_TERRAIN_SKIP)*COLS+x] = '.';
 }
 
 static void ground_generate_random() {
